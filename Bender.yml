@@ -6,7 +6,7 @@ package:
 
 sources:
   - rtl/register.sv
-  - rtl/counter.sv
+  - rtl/cntr.sv
   - rtl/skidbuffer.sv
   - rtl/bytewrite_sram.sv
 
