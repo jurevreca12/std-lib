@@ -8,4 +8,5 @@ sources:
   - rtl/register.sv
   - rtl/counter.sv
   - rtl/skidbuffer.sv
+  - rtl/bytewrite_sram.sv
 
