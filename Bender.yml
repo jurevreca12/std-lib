@@ -9,4 +9,4 @@ sources:
   - rtl/cntr.sv
   - rtl/skidbuffer.sv
   - rtl/bytewrite_sram.sv
-  - rtl/fifo.sv
+  - rtl/fifo_handshake.sv
