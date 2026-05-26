@@ -1,4 +1,4 @@
-module fifo #(
+module fifo_handshake #(
     parameter type         dtype  = logic [7:0],
     parameter int unsigned DEPTH  = 4,
 		parameter int unsigned ALMOST_FULL_DEPTH = 3
