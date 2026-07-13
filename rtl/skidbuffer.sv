@@ -5,6 +5,7 @@ module skidbuffer
 (
     input  logic                  clk,
     input  logic                  rstn,
+    input  logic                  clear,
 
     input  logic                  input_valid,
     output logic                  input_ready,
@@ -99,6 +100,7 @@ module skidbuffer
         state_next = fill   ? eFULL  : state_next;
         state_next = flush  ? eBUSY  : state_next;
         state_next = unload ? eEMPTY : state_next;
+	state_next = clear  ? eEMPTY : state_next;
     end
     register #(
         .DTYPE (sb_fsm_e),
