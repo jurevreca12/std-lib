@@ -145,7 +145,7 @@ if __name__ == "__main__":
         sources=get_rtl_files(),
         includes=[],
         build_args=build_args,
-        hdl_toplevel="fifo",
+        hdl_toplevel="fifo_handshake",
         parameters={},
         always=True,
         waves=False,
