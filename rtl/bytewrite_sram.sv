@@ -31,6 +31,14 @@ initial begin
     if (MEM_INIT_FILE != "") begin
         if   (INIT_FILE_BIN==1) $readmemb(MEM_INIT_FILE, RAM, 0);
         else                    $readmemh(MEM_INIT_FILE, RAM, 0);
+    end else begin
+	string mem_init_file;
+        $value$plusargs("MEM_INIT_FILE=%s", mem_init_file);
+        if (mem_init_file != "") begin
+            $display("Initializing memory with: %s", mem_init_file);
+            if   (INIT_FILE_BIN==1) $readmemb(mem_init_file, RAM, 0);
+            else                    $readmemh(mem_init_file, RAM, 0);
+        end
     end
 end
 
