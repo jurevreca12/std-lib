@@ -11,7 +11,7 @@ module register
     output DTYPE out
 );
 
-    always_ff @(posedge clk) begin
+    always_ff @(posedge clk or negedge(rstn)) begin
         if (~rstn)
             out <= RESET_VALUE;
         else if (ce)
