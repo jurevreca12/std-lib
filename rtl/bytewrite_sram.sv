@@ -44,18 +44,37 @@ initial begin
 end
 `endif
 
-always @(posedge clk) begin
-    if (valid)
-        dout <= RAM[addr];
-end
-
-generate genvar i;
-for (i = 0; i < NBytes; i = i+1)
-begin: gen_per_byte_we
+`ifdef SYNTHESIS
+  sram_impl #(
+    .WORD_SIZE     (WORD_SIZE),
+    .MEM_INIT_FILE (MEM_INIT_FILE),
+    .INIT_FILE_BIN (INIT_FILE_BIN),
+    .MEM_SIZE_WORDS(MEM_SIZE_WORDS)
+  ) sram_impl_i (
+    .clk   (clk),
+    .strobe(strobe),
+    .write (write),
+    .valid (valid),
+    .addr  (addr),
+    .din   (din),
+    .dout  (dout)
+  );
+`else 
   always @(posedge clk) begin
-      if (strobe[i] & write & valid)
-          RAM[addr][8 * (i + 1) - 1 : i * 8] <= din[8 * (i + 1) - 1 : i * 8];
-      end
+      if (valid)
+          dout <= RAM[addr];
   end
-endgenerate
+  
+  generate genvar i;
+  for (i = 0; i < NBytes; i = i+1)
+  begin: gen_per_byte_we
+    always @(posedge clk) begin
+        if (strobe[i] & write & valid)
+            RAM[addr][8 * (i + 1) - 1 : i * 8] <= din[8 * (i + 1) - 1 : i * 8];
+        end
+    end
+  endgenerate
+`endif
+
 endmodule
+
