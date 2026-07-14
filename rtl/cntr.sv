@@ -15,7 +15,7 @@ module cntr #(
     ) rvfi_order_reg (
         .clk  (clk),
         .rstn (rstn),
-	.clear(clear)
+        .clear(clear),
         .ce   (ce),
         .in   (plus_one),
         .out  (count)
