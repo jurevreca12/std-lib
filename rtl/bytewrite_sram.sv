@@ -27,6 +27,7 @@ module bytewrite_sram #(
 
 logic [WORD_SIZE-1:0] RAM [MEM_SIZE_WORDS];
 
+`ifndef SYNTHESIS
 initial begin
     if (MEM_INIT_FILE != "") begin
         if   (INIT_FILE_BIN==1) $readmemb(MEM_INIT_FILE, RAM, 0);
@@ -41,7 +42,7 @@ initial begin
         end
     end
 end
-
+`endif
 
 always @(posedge clk) begin
     if (valid)
