@@ -2,7 +2,7 @@ module sram_impl #(
   parameter   int     WORD_SIZE=32,
   parameter           MEM_INIT_FILE="",
   parameter   int     INIT_FILE_BIN=1,
-  parameter   int     MEM_SIZE_WORDS = 2**12,
+  parameter   int     MEM_SIZE_WORDS = 2048,
   // Dependent parameters, do not overwrite
   localparam  int     AddrWidth = $clog2(MEM_SIZE_WORDS),
   localparam  int     NBytes = (WORD_SIZE / 8)
@@ -18,13 +18,13 @@ module sram_impl #(
 
   // Generate bit mask for interleaving 2*32'b into 64'b
   logic [WORD_SIZE-1:0] bm;
-
+  logic addr_lsb;
   for(genvar i = 0; i < WORD_SIZE; ++i) begin: gen_bm_ports
     assign bm[i] = strobe[i/8];
   end
 
   // Generate desired SRAM with IHP primitives
-  if(MEM_SIZE_WORDS == 2048 && WORD_SIZE == 32) begin: gen_2048x64xBx1
+  if(MEM_SIZE_WORDS == 2048 && WORD_SIZE == 32) begin: gen_1024x64xBx1
     logic [63:0] wdata64, rdata64, bm64;
     // logic sram_sel_d, sram_sel_q;
     logic [63:0] bm_q;
@@ -37,7 +37,7 @@ module sram_impl #(
         wdata64[2*i]     = din[i] & bm64[2*i]; // even bits (active if addr LSB is 0)
         wdata64[2*i+1]   = din[i] & bm64[2*i+1]; // odd bits  (active if addr LSB is 1)
 
-        if(~addr[0]) begin
+        if(~addr_lsb) begin
           dout[i] = rdata64[2*i] & bm_q[2*i];   // even bits
         end else begin
           dout[i] = rdata64[2*i+1] & bm_q[2*i+1]; // odd bits
@@ -45,10 +45,11 @@ module sram_impl #(
       end
     end
 
-    
-
     always_ff @(posedge clk) begin: bm_assign
-      if(valid & ~write) bm_q <= bm64;
+      if(valid & ~write) begin
+        bm_q <= bm64;
+        addr_lsb <= addr[0];
+      end
     end
 
     // LSB needed for read in next cycle

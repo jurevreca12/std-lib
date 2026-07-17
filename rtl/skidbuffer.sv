@@ -100,7 +100,7 @@ module skidbuffer
         state_next = fill   ? eFULL  : state_next;
         state_next = flush  ? eBUSY  : state_next;
         state_next = unload ? eEMPTY : state_next;
-	state_next = clear  ? eEMPTY : state_next;
+	    state_next = clear  ? eEMPTY : state_next;
     end
     register #(
         .DTYPE (sb_fsm_e),
