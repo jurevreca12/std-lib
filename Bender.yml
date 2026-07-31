@@ -17,6 +17,6 @@ sources:
     files:
       - rtl/bytewrite_sram_ihp.sv
   # Synthesizable SRAM implementation
-  - target: fpga
+  - target: or(fpga, sim)
     files:
       - rtl/bytewrite_sram_fpga.sv
