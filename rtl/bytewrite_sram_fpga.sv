@@ -31,7 +31,9 @@ initial begin
     if (MEM_INIT_FILE != "") begin
         if   (INIT_FILE_BIN==1) $readmemb(MEM_INIT_FILE, RAM, 0);
         else                    $readmemh(MEM_INIT_FILE, RAM, 0);
-    end else begin
+    end 
+`ifdef SIM
+    else begin
         reg [8*512-1:0] mem_init_file;
         $value$plusargs("MEM_INIT_FILE=%s", mem_init_file);
         if (mem_init_file != "") begin
@@ -40,6 +42,7 @@ initial begin
             else                    $readmemh(mem_init_file, RAM, 0);
         end
     end
+`endif
 end
 
   always @(posedge clk) begin
