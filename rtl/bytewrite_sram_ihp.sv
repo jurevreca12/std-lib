@@ -1,4 +1,4 @@
-module sram_impl #(
+module bytewrite_sram #(
   parameter   int     WORD_SIZE=32,
   parameter           MEM_INIT_FILE="",
   parameter   int     INIT_FILE_BIN=1,

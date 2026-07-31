@@ -27,12 +27,13 @@ module bytewrite_sram #(
 
 logic [WORD_SIZE-1:0] RAM [MEM_SIZE_WORDS];
 
-`ifndef SYNTHESIS
 initial begin
     if (MEM_INIT_FILE != "") begin
         if   (INIT_FILE_BIN==1) $readmemb(MEM_INIT_FILE, RAM, 0);
         else                    $readmemh(MEM_INIT_FILE, RAM, 0);
-    end else begin
+    end 
+`ifdef SIM
+    else begin
         reg [8*512-1:0] mem_init_file;
         $value$plusargs("MEM_INIT_FILE=%s", mem_init_file);
         if (mem_init_file != "") begin
@@ -41,25 +42,9 @@ initial begin
             else                    $readmemh(mem_init_file, RAM, 0);
         end
     end
-end
 `endif
+end
 
-`ifdef SYNTHESIS
-  sram_impl #(
-    .WORD_SIZE     (WORD_SIZE),
-    .MEM_INIT_FILE (MEM_INIT_FILE),
-    .INIT_FILE_BIN (INIT_FILE_BIN),
-    .MEM_SIZE_WORDS(MEM_SIZE_WORDS)
-  ) sram_impl_i (
-    .clk   (clk),
-    .strobe(strobe),
-    .write (write),
-    .valid (valid),
-    .addr  (addr),
-    .din   (din),
-    .dout  (dout)
-  );
-`else 
   always @(posedge clk) begin
       if (valid)
           dout <= RAM[addr];
@@ -74,7 +59,6 @@ end
         end
     end
   endgenerate
-`endif
 
 endmodule
 
